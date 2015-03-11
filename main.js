@@ -66,7 +66,6 @@ function draw(){
   clear(ctx);
   drawGrid(ctx);
   for(var i = 0;i < shapes.length;i++){
-    
     if(shapes.selected === i){
       transform(shapes[i],x-point.x,y-point.y);
       fill(ctx,shapes[i]);
@@ -97,7 +96,6 @@ canvas.onmousemove = function(e){
     point.y = y;
   }
 };
-
 canvas.onmouseup = function(e){
   down = false;
   if(shapes.selected !== -1){
@@ -106,6 +104,36 @@ canvas.onmouseup = function(e){
   }
 };
 
+function touchHandler(event) //http://stackoverflow.com/questions/1517924/javascript-mapping-touch-events-to-mouse-events
+{
+    var touches = event.changedTouches,
+        first = touches[0],
+        type = "";
+         switch(event.type)
+    {
+        case "touchstart": type = "mousedown"; break;
+        case "touchmove":  type="mousemove"; break;
+        case "touchend":   type="mouseup"; break;
+        default: return;
+    }
+
+    //initMouseEvent(type, canBubble, cancelable, view, clickCount,
+    //           screenX, screenY, clientX, clientY, ctrlKey,
+    //           altKey, shiftKey, metaKey, button, relatedTarget);
+
+    var simulatedEvent = document.createEvent("MouseEvent");
+    simulatedEvent.initMouseEvent(type, true, true, window, 1,
+                              first.screenX, first.screenY,
+                              first.clientX, first.clientY, false,
+                              false, false, false, 0/*left*/, null);
+
+    irst.target.dispatchEvent(simulatedEvent);
+    event.preventDefault();
+}
+canvas.addEventListener("touchstart", touchHandler, true);
+canvas.addEventListener("touchmove", touchHandler, true);
+canvas.addEventListener("touchend", touchHandler, true);
+    
 function snap(shape){
   var tmp = shape.points[0];
   transform(shape,-(tmp.x+size/2)%size+size/2,-(tmp.y+size/2)%size+size/2);
