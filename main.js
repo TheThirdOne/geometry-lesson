@@ -6,6 +6,7 @@ var rectangle = {
   points: [{x:10,y:10},{x:50,y:10},{x:60,y:100},{x:10,y:100}]
 };
 var point,x,y,down;
+var size = 20;
 rectangle.color = '#700';
 outline(ctx,rectangle);
 var shapes = [rectangle];
@@ -45,13 +46,33 @@ function outline(ctx, poly){
   ctx.stroke();
 }
 
+function drawGrid(ctx){
+  var horizontal = canvas.height/size, vertical = canvas.width/size;
+  ctx.strokeStyle = "#888";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for(var i = 0; i <= horizontal;i++){
+    ctx.moveTo(0,i*size);
+    ctx.lineTo(canvas.width,i*size);
+  }
+  for(i = 0; i <= vertical;i++){
+    ctx.moveTo(i*size,0);
+    ctx.lineTo(i*size,canvas.height);
+  }
+  ctx.closePath();
+  ctx.stroke();
+}
 function draw(){
   clear(ctx);
+  drawGrid(ctx);
   for(var i = 0;i < shapes.length;i++){
-    fill(ctx,shapes[i]);
+    
     if(shapes.selected === i){
       transform(shapes[i],x-point.x,y-point.y);
+      fill(ctx,shapes[i]);
       outline(ctx,shapes[i]);
+    }else{
+      fill(ctx,shapes[i]);
     }
   }
 }
@@ -59,6 +80,7 @@ canvas.onmousedown = function(e){
   down = true;
   point = {y:e.y,x:e.x};
   x = e.x; y = e.y;
+  shapes.selected = -1;
   for(var i = 0;i < shapes.length;i++){
     if(pointInside(point,shapes[i].points)){
       shapes.selected = i;
@@ -78,8 +100,16 @@ canvas.onmousemove = function(e){
 
 canvas.onmouseup = function(e){
   down = false;
+  if(shapes.selected !== -1){
+    snap(shapes[shapes.selected]);
+    draw();
+  }
 };
 
+function snap(shape){
+  var tmp = shape.points[0];
+  transform(shape,-(tmp.x+size/2)%size+size/2,-(tmp.y+size/2)%size+size/2);
+}
 function transform(shape,dx,dy){
   for(var i = 0; i < shape.points.length;i++){
     shape.points[i].x += dx;
