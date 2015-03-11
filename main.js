@@ -127,7 +127,7 @@ function touchHandler(event) //http://stackoverflow.com/questions/1517924/javasc
                               first.clientX, first.clientY, false,
                               false, false, false, 0/*left*/, null);
 
-    irst.target.dispatchEvent(simulatedEvent);
+    first.target.dispatchEvent(simulatedEvent);
     event.preventDefault();
 }
 canvas.addEventListener("touchstart", touchHandler, true);
