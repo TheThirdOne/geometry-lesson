@@ -4,11 +4,22 @@ var ctx = canvas.getContext("2d");
 var rectangle = {
   color: "#000",
   points: [{x:10,y:10},{x:50,y:10},{x:60,y:100},{x:10,y:100}]
-}
-fill(ctx, rectangle);
+};
+var point,x,y,down;
 rectangle.color = '#700';
 outline(ctx,rectangle);
+var shapes = [rectangle];
+rectangle = {
+  color: "#333",
+  points: [{x:10,y:100},{x:50,y:100},{x:60,y:200},{x:10,y:200}]
+};
+shapes.push(rectangle);
+draw();
 
+
+function clear(ctx){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 //draws a solid polygon
 function fill(ctx, poly){
   ctx.fillStyle = poly.color;
@@ -23,8 +34,8 @@ function fill(ctx, poly){
 
 //outlines a polygon
 function outline(ctx, poly){
-  ctx.strokeStyle = poly.color;
-  ctx.lineWidth = 10;
+  ctx.strokeStyle = "#FF0";
+  ctx.lineWidth = 5;
   ctx.beginPath();
   ctx.moveTo(poly.points[0].x,poly.points[0].y);
   for(var i = 1; i < poly.points.length;i++){
@@ -34,18 +45,47 @@ function outline(ctx, poly){
   ctx.stroke();
 }
 
+function draw(){
+  clear(ctx);
+  for(var i = 0;i < shapes.length;i++){
+    fill(ctx,shapes[i]);
+    if(shapes.selected === i){
+      transform(shapes[i],x-point.x,y-point.y);
+      outline(ctx,shapes[i]);
+    }
+  }
+}
 canvas.onmousedown = function(e){
-  var point = {y:e.y,x:e.x};
-  if(pointInside(point,rectangle.points)){
-    rectangle.color = '#999';
-    fill(ctx,rectangle);
-  }else{
-    rectangle.color = '#700';
-    fill(ctx,rectangle);
+  down = true;
+  point = {y:e.y,x:e.x};
+  x = e.x; y = e.y;
+  for(var i = 0;i < shapes.length;i++){
+    if(pointInside(point,shapes[i].points)){
+      shapes.selected = i;
+    }
+  }
+  draw();
+};
+canvas.onmousemove = function(e){
+  if(down){
+    x = e.x;
+    y = e.y;
+    draw();
+    point.x = x;
+    point.y = y;
   }
 };
 
+canvas.onmouseup = function(e){
+  down = false;
+};
 
+function transform(shape,dx,dy){
+  for(var i = 0; i < shape.points.length;i++){
+    shape.points[i].x += dx;
+    shape.points[i].y += dy;
+  }
+}
 function pointInside(point,shape){
   var intersections = 0,a={m:0,b:point.y},b,tmp;
   shape.push(shape[0]); // make it loop
