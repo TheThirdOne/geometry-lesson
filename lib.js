@@ -1,13 +1,36 @@
 //Math
 function snap(shape){
   var tmp = shape.points[0];
-  transform(shape,-(tmp.x+size/2)%size+size/2,-(tmp.y+size/2)%size+size/2);
+  translate(shape,-(tmp.x+size/2)%size+size/2,-(tmp.y+size/2)%size+size/2);
 }
-function transform(shape,dx,dy){
+function translate(shape,dx,dy){
   for(var i = 0; i < shape.points.length;i++){
     shape.points[i].x += dx;
     shape.points[i].y += dy;
   }
+}
+function reflectX(shape){
+  var mirror = cg(shape);
+  mirror.x -= (mirror.x + size/2)%size - size/2;
+  for(var i = 0; i < shape.points.length;i++){
+    shape.points[i].x = 2*mirror.x - shape.points[i].x;
+  }
+}
+function reflectY(shape){
+  var mirror = cg(shape);
+  mirror.y -= (mirror.y + size/2)%size - size/2;
+  for(var i = 0; i < shape.points.length;i++){
+    shape.points[i].y = 2*mirror.y - shape.points[i].y;
+  }
+}
+function cg(shape){
+  var x = 0, y = 0;
+  for(var i = 0; i < shape.points.length;i++){
+    x += shape.points[i].x;
+    y += shape.points[i].y;
+  }
+  
+  return {x:x/shape.points.length,y:y/shape.points.length};
 }
 function pointInside(point,shape){
   var intersections = 0,a={m:0,b:point.y},b,tmp;
@@ -66,7 +89,13 @@ function lineFromPoints(a,b){
   return out;
 }
 
-
+function Shape(xs,ys){
+  this.points = [];
+  for(var i = 0; i < xs.length && i < ys.length;i++){
+    this.points.push({x:xs[i]*size,y:ys[i]*size});
+  }
+  this.color = randomColor();
+}
 
 
 //Graphics

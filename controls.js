@@ -6,7 +6,6 @@ canvas.onmousedown = function(e){
   for(var i = 0;i < shapes.length;i++){
     if(pointInside(point,shapes[i].points)){
       shapes.selected = i;
-      shapes[i].color = randomColor();
     }
   }
   draw();

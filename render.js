@@ -18,8 +18,8 @@ function fill(ctx, poly){
 
 //outlines a polygon
 function outline(ctx, poly){
-  ctx.strokeStyle = "#FF0";
-  ctx.lineWidth = 5;
+  ctx.strokeStyle = "#555";
+  ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(poly.points[0].x,poly.points[0].y);
   for(var i = 1; i < poly.points.length;i++){
@@ -50,7 +50,7 @@ function draw(){
   drawGrid(ctx);
   for(var i = 0;i < shapes.length;i++){
     if(shapes.selected === i){
-      transform(shapes[i],x-point.x,y-point.y);
+      translate(shapes[i],x-point.x,y-point.y);
       fill(ctx,shapes[i]);
       outline(ctx,shapes[i]);
     }else{
