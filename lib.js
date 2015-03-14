@@ -64,6 +64,54 @@ function cg(shape){
   
   return {x:x/shape.points.length,y:y/shape.points.length};
 }
+function cut(poly,a,b){
+  poly.points.push(poly.points[0]);
+  var t;
+  for(var i = 1; i < poly.points.length;i++){
+    //a = point[i]
+    if(poly.points[i].x === a.x && poly.points[i].y === a.y){
+      a.i = i; a.t = true;
+    }
+    //area of triangle with vertices: a, point[i], point[i-1] = 0
+    if(poly.points[i].x * (poly.points[i-1].y - a.y) + poly.points[i-1].x * (a.y - poly.points[i].y) + a.x * (poly.points[i].y - poly.points[i-1].y) === 0){
+      a.i = i;
+      break;
+    }
+  }
+  for(i = 1; i < poly.points.length;i++){
+    //b = point[i]
+    if(poly.points[i].x === b.x && poly.points[i].y === b.y){
+      b.i = i; b.t = true;
+    }
+    //area of triangle with vertices: a, point[i], point[i-1] = 0
+    if(poly.points[i].x * (poly.points[i-1].y - b.y) + poly.points[i-1].x * (b.y - poly.points[i].y) + b.x * (poly.points[i].y - poly.points[i-1].y) === 0){
+      b.i = i;
+      break;
+    }
+  }
+  poly.points.pop();
+  if(a.i === undefined || b.i === undefined){
+    throw "Points don't lie on poly";
+  }
+  if(b.i < a.i){ //make sure ai is smaller
+    t = b;
+    b = a;
+    a = t;
+  }
+  poly.points.splice(a.i,0,{x:a.x,y:a.y});
+  if(!a.t){
+    poly.points.splice(a.i,0,{x:a.x,y:a.y});
+    b.i++;
+  }
+  poly.points.splice(b.i+1,0,{x:b.x,y:b.y});
+  if(!b.t){
+    poly.points.splice(b.i+1,0,{x:b.x,y:b.y});
+    b.i++;
+  }
+  var tmp = poly.points.slice(a.i+1,b.i+1);
+  poly.points.splice(a.i+1,b.i-a.i);
+  return {points:tmp,color:poly.color};
+}
 function pointInside(point,shape){
   var intersections = 0,a={m:0,b:point.y},b,tmp;
   shape.push(shape[0]); // make it loop
