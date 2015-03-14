@@ -9,16 +9,48 @@ function translate(shape,dx,dy){
     shape.points[i].y += dy;
   }
 }
+
+function rotate(shape,direction){
+  var center = cg(shape), t;
+  center.x -= (center.x + size/2)%size - size/2; //snap to grid
+  center.y -= (center.y + size/2)%size - size/2;
+  if(direction < 0){
+    direction = direction % 4 + 4;
+  }
+  switch (direction % 4){
+    case 3:
+      for(var i = 0; i < shape.points.length;i++){
+        t =  center.y + center.x - shape.points[i].x;
+        shape.points[i].x = center.x - center.y + shape.points[i].y;
+        shape.points[i].y = t;
+      }
+      break;
+    case 2:
+      for(i = 0; i < shape.points.length;i++){
+        shape.points[i].y = 2*center.y - shape.points[i].y;
+        shape.points[i].x = 2*center.x - shape.points[i].x;
+      }
+      break;
+    case 1:
+      for(i = 0; i < shape.points.length;i++){
+        t =  center.y - center.x + shape.points[i].x;
+        shape.points[i].x = center.x + center.y - shape.points[i].y;
+        shape.points[i].y = t;
+      }
+      break;
+    default:
+  }
+}
 function reflectX(shape){
   var mirror = cg(shape);
-  mirror.x -= (mirror.x + size/2)%size - size/2;
+  mirror.x -= (mirror.x + size/2)%size - size/2; //snap to grid
   for(var i = 0; i < shape.points.length;i++){
     shape.points[i].x = 2*mirror.x - shape.points[i].x;
   }
 }
 function reflectY(shape){
   var mirror = cg(shape);
-  mirror.y -= (mirror.y + size/2)%size - size/2;
+  mirror.y -= (mirror.y + size/2)%size - size/2; //snap to grid
   for(var i = 0; i < shape.points.length;i++){
     shape.points[i].y = 2*mirror.y - shape.points[i].y;
   }
