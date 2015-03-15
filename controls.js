@@ -21,32 +21,57 @@ canvas.onmousedown = function(e){
       }
       return;
     }
-    
+    if(e.y < size*20){
+      cutmode ^= true;
+      incision = undefined;
+      return;
+    }
     return;
   }
-  shapes.selected = -1;
-  for(var i = 0;i < shapes.length;i++){
-    if(pointInside(point,shapes[i].points)){
-      shapes.selected = i;
+  if(!cutmode || shapes.selected === -1){
+    shapes.selected = -1;
+    for(var i = 0;i < shapes.length;i++){
+      if(pointInside(point,shapes[i].points)){
+        shapes.selected = i;
+      }
+    }
+  }else{
+    if(incision){
+      nearest(incision);
+      nearest(point);
+      console.log(shapes[shapes.selected].points[0].x);
+      shapes.push(cut(shapes[shapes.selected],incision,point));
+      incision = undefined;
+      cutmode = false;
+    }else{
+      incision = {x:x,y:y};
     }
   }
   draw();
 };
 canvas.onmousemove = function(e){
-  if(down){
+  if(down && !cutmode){
     x = e.x;
     y = e.y;
     draw();
     point.x = x;
     point.y = y;
   }
+  if(cutmode){
+    x = e.x;
+    y = e.y;
+    point.x = x;
+    point.y = y;
+    draw();
+  }
+  
 };
 canvas.onmouseup = function(e){
   down = false;
-  if(shapes.selected !== -1){
+  if(shapes.selected !== -1 && !cutmode){
     snap(shapes[shapes.selected]);
-    draw();
   }
+  draw();
 };
 
 function touchHandler(event) //http://stackoverflow.com/questions/1517924/javascript-mapping-touch-events-to-mouse-events

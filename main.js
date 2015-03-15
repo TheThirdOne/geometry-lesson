@@ -1,7 +1,7 @@
-var point,x,y,down;
+var point,x,y,down,cutmode,incision;
 
 
-var size = ((window.innerWidth<window.innerHeight)?window.innerWidth:window.innerHeight)/25; //make 20 cells minimum
+var size = ((window.innerWidth<window.innerHeight)?window.innerWidth:window.innerHeight)/25|0; //make 20 cells minimum
 canvas.width  = window.innerWidth; //canvas should take up the entire screen
 canvas.height = window.innerHeight;
 canvas.width  -= canvas.width%size+size-1; //make the edges line up + not need scrollbars

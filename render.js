@@ -2,7 +2,9 @@ var canvas = document.getElementById('main'),
 right = document.getElementById('right'),
 left = document.getElementById('left'),
 horizontal = document.getElementById('horizontal'),
-vertical = document.getElementById('vertical');
+vertical = document.getElementById('vertical'),
+scissor = document.getElementById('scissor'),
+highlight = document.getElementById('highlight');
 var ctx = canvas.getContext("2d");
 
 function clear(ctx){
@@ -46,7 +48,6 @@ function drawGrid(ctx){
     ctx.moveTo(i*size,0);
     ctx.lineTo(i*size,ctx.canvas.height);
   }
-  ctx.closePath();
   ctx.stroke();
 }
 function draw(){
@@ -65,4 +66,17 @@ function draw(){
   ctx.drawImage(left,5,size*4-5,size*4-10,size*4-10);
   ctx.drawImage(horizontal,5,size*8-5,size*4-10,size*4-10);
   ctx.drawImage(vertical,5,size*12-5,size*4-10,size*4-10);
+  if(cutmode){
+    ctx.drawImage(highlight,5,size*16-5,size*4-10,size*4-10);
+    if(incision){
+      ctx.strokeStyle = '#333';
+      ctx.beginPath();
+      ctx.moveTo(incision.x,incision.y);
+      ctx.lineTo(point.x,point.y);
+      ctx.stroke();
+    }
+  }else{
+    ctx.drawImage(scissor,5,size*16-5,size*4-10,size*4-10);
+  }
+  
 }

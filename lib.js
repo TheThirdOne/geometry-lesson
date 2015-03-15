@@ -3,6 +3,10 @@ function snap(shape){
   var tmp = shape.points[0];
   translate(shape,-(tmp.x+size/2)%size+size/2,-(tmp.y+size/2)%size+size/2);
 }
+function nearest(point){
+  point.x -= (point.x+size/2)%size-size/2;
+  point.y -= (point.y+size/2)%size-size/2;
+}
 function translate(shape,dx,dy){
   for(var i = 0; i < shape.points.length;i++){
     shape.points[i].x += dx;
@@ -71,6 +75,7 @@ function cut(poly,a,b){
     //a = point[i]
     if(poly.points[i].x === a.x && poly.points[i].y === a.y){
       a.i = i; a.t = true;
+      break;
     }
     //area of triangle with vertices: a, point[i], point[i-1] = 0
     if(poly.points[i].x * (poly.points[i-1].y - a.y) + poly.points[i-1].x * (a.y - poly.points[i].y) + a.x * (poly.points[i].y - poly.points[i-1].y) === 0){
@@ -82,6 +87,7 @@ function cut(poly,a,b){
     //b = point[i]
     if(poly.points[i].x === b.x && poly.points[i].y === b.y){
       b.i = i; b.t = true;
+      break;
     }
     //area of triangle with vertices: a, point[i], point[i-1] = 0
     if(poly.points[i].x * (poly.points[i-1].y - b.y) + poly.points[i-1].x * (b.y - poly.points[i].y) + b.x * (poly.points[i].y - poly.points[i-1].y) === 0){
@@ -91,7 +97,7 @@ function cut(poly,a,b){
   }
   poly.points.pop();
   if(a.i === undefined || b.i === undefined){
-    throw "Points don't lie on poly";
+    throw "Points don't lie on poly:" + a.i + b.i;
   }
   if(b.i < a.i){ //make sure ai is smaller
     t = b;
@@ -110,6 +116,7 @@ function cut(poly,a,b){
   }
   var tmp = poly.points.slice(a.i+1,b.i+1);
   poly.points.splice(a.i+1,b.i-a.i);
+  
   return {points:tmp,color:poly.color};
 }
 function pointInside(point,shape){
