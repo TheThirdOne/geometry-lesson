@@ -1,4 +1,6 @@
-var canvas = document.getElementById('main');
+var canvas = document.getElementById('main'),
+right = document.getElementById('right'),
+left = document.getElementById('left');
 var ctx = canvas.getContext("2d");
 
 function clear(ctx){
@@ -35,10 +37,10 @@ function drawGrid(ctx){
   ctx.lineWidth = 1;
   ctx.beginPath();
   for(var i = 0; i <= horizontal;i++){
-    ctx.moveTo(0,i*size);
+    ctx.moveTo(4*size,i*size);
     ctx.lineTo(ctx.canvas.width,i*size);
   }
-  for(i = 0; i <= vertical;i++){
+  for(i = 4; i <= vertical;i++){
     ctx.moveTo(i*size,0);
     ctx.lineTo(i*size,ctx.canvas.height);
   }
@@ -57,4 +59,6 @@ function draw(){
       fill(ctx,shapes[i]);
     }
   }
+  ctx.drawImage(right,5,5,size*4-10,size*4-10);
+  ctx.drawImage(left,5,size*4-5,size*4-10,size*4-10);
 }

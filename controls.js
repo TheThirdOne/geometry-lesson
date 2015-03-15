@@ -2,6 +2,15 @@ canvas.onmousedown = function(e){
   down = true;
   point = {y:e.y,x:e.x};
   x = e.x; y = e.y;
+  if(e.x < size*4){
+    if(e.y < size*8){
+      if(shapes.selected != -1){
+        rotate(shapes[shapes.selected],(e.y < size*4)?1:-1);
+      }
+      return;
+    }
+    return;
+  }
   shapes.selected = -1;
   for(var i = 0;i < shapes.length;i++){
     if(pointInside(point,shapes[i].points)){

@@ -172,7 +172,7 @@ function lineFromPoints(a,b){
 function Shape(xs,ys){
   this.points = [];
   for(var i = 0; i < xs.length && i < ys.length;i++){
-    this.points.push({x:xs[i]*size,y:ys[i]*size});
+    this.points.push({x:xs[i]*size + size*4,y:ys[i]*size});
   }
   this.color = randomColor();
 }
