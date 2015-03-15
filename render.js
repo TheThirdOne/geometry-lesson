@@ -1,6 +1,8 @@
 var canvas = document.getElementById('main'),
 right = document.getElementById('right'),
-left = document.getElementById('left');
+left = document.getElementById('left'),
+horizontal = document.getElementById('horizontal'),
+vertical = document.getElementById('vertical');
 var ctx = canvas.getContext("2d");
 
 function clear(ctx){
@@ -61,4 +63,6 @@ function draw(){
   }
   ctx.drawImage(right,5,5,size*4-10,size*4-10);
   ctx.drawImage(left,5,size*4-5,size*4-10,size*4-10);
+  ctx.drawImage(horizontal,5,size*8-5,size*4-10,size*4-10);
+  ctx.drawImage(vertical,5,size*12-5,size*4-10,size*4-10);
 }

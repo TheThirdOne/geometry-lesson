@@ -9,6 +9,19 @@ canvas.onmousedown = function(e){
       }
       return;
     }
+    if(e.y < size*12){
+      if(shapes.selected != -1){
+        reflectX(shapes[shapes.selected]);
+      }
+      return;
+    }
+    if(e.y < size*16){
+      if(shapes.selected != -1){
+        reflectY(shapes[shapes.selected]);
+      }
+      return;
+    }
+    
     return;
   }
   shapes.selected = -1;
