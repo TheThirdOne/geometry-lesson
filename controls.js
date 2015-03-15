@@ -36,16 +36,7 @@ canvas.onmousedown = function(e){
       }
     }
   }else{
-    if(incision){
-      nearest(incision);
-      nearest(point);
-      console.log(shapes[shapes.selected].points[0].x);
-      shapes.push(cut(shapes[shapes.selected],incision,point));
-      incision = undefined;
-      cutmode = false;
-    }else{
-      incision = {x:x,y:y};
-    }
+    incision = {x:x,y:y};
   }
   draw();
 };
@@ -70,6 +61,14 @@ canvas.onmouseup = function(e){
   down = false;
   if(shapes.selected !== -1 && !cutmode){
     snap(shapes[shapes.selected]);
+  }
+  if(incision){
+    nearest(incision);
+    nearest(point);
+    console.log(shapes[shapes.selected].points[0].x);
+    shapes.push(cut(shapes[shapes.selected],incision,point));
+    incision = undefined;
+    cutmode = false;
   }
   draw();
 };
