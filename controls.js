@@ -37,6 +37,7 @@ canvas.onmousedown = function(e){
     }
   }else{
     incision = {x:x,y:y};
+    nearest(incision);
   }
   draw();
 };
@@ -65,12 +66,14 @@ canvas.onmouseup = function(e){
   if(incision){
     nearest(incision);
     nearest(point);
+    cutmode = false;
     try{
       shapes.push(cut(shapes[shapes.selected],incision,point));
     }catch(e){
+      cutmode = true;
     }
     incision = undefined;
-    cutmode = false;
+    
     x = e.x;
     y = e.y;
     point.x = x;
