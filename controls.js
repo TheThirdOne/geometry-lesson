@@ -71,6 +71,12 @@ canvas.onmouseup = function(e){
       shapes.push(cut(shapes[shapes.selected],incision,point));
     }catch(e){
       cutmode = true;
+      for(var i = 0; i < shapes.length;i++){
+        if(pointInside(incision,shapes[i].points)&&pointInside(point,shapes[i].points)){
+          shapes.selected = i;
+          break;
+        }
+      }
     }
     incision = undefined;
     
