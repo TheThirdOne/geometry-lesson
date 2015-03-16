@@ -105,14 +105,14 @@ function cut(poly,a,b){
     a = t;
   }
   poly.points.splice(a.i,0,{x:a.x,y:a.y});
+  b.i++;
   if(!a.t){
     poly.points.splice(a.i,0,{x:a.x,y:a.y});
     b.i++;
   }
-  poly.points.splice(b.i+1,0,{x:b.x,y:b.y});
+  poly.points.splice(b.i,0,{x:b.x,y:b.y});
   if(!b.t){
-    poly.points.splice(b.i+1,0,{x:b.x,y:b.y});
-    b.i++;
+    poly.points.splice(b.i,0,{x:b.x,y:b.y});
   }
   var tmp = poly.points.slice(a.i+1,b.i+1);
   poly.points.splice(a.i+1,b.i-a.i);
