@@ -79,8 +79,11 @@ function cut(poly,a,b){
     }
     //area of triangle with vertices: a, point[i], point[i-1] = 0
     if(poly.points[i].x * (poly.points[i-1].y - a.y) + poly.points[i-1].x * (a.y - poly.points[i].y) + a.x * (poly.points[i].y - poly.points[i-1].y) === 0){
-      a.i = i;
-      break;
+      //if point is between the two vertices
+      if(poly.points[i].x < a.x ^ poly.points[i-1].x < a.x){
+        a.i = i;
+        break;
+      }
     }
   }
   for(i = 1; i < poly.points.length;i++){
@@ -91,8 +94,11 @@ function cut(poly,a,b){
     }
     //area of triangle with vertices: a, point[i], point[i-1] = 0
     if(poly.points[i].x * (poly.points[i-1].y - b.y) + poly.points[i-1].x * (b.y - poly.points[i].y) + b.x * (poly.points[i].y - poly.points[i-1].y) === 0){
-      b.i = i;
-      break;
+      //if point is between the two vertices
+      if(poly.points[i].x < b.x ^ poly.points[i-1].x < b.x){
+        b.i = i;
+        break;
+      }
     }
   }
   poly.points.pop();

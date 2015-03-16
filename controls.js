@@ -65,8 +65,11 @@ canvas.onmouseup = function(e){
   if(incision){
     nearest(incision);
     nearest(point);
-    console.log(shapes[shapes.selected].points[0].x);
-    shapes.push(cut(shapes[shapes.selected],incision,point));
+    try{
+      shapes.push(cut(shapes[shapes.selected],incision,point));
+    }catch(e){
+      
+    }
     incision = undefined;
     cutmode = false;
   }
