@@ -68,12 +68,17 @@ canvas.onmouseup = function(e){
     try{
       shapes.push(cut(shapes[shapes.selected],incision,point));
     }catch(e){
-      
     }
     incision = undefined;
     cutmode = false;
+    x = e.x;
+    y = e.y;
+    point.x = x;
+    point.y = y;
+    draw();
+  }else{
+    draw();
   }
-  draw();
 };
 
 function touchHandler(event) //http://stackoverflow.com/questions/1517924/javascript-mapping-touch-events-to-mouse-events
