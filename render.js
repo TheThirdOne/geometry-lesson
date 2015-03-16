@@ -72,7 +72,6 @@ function draw(){
       ctx.strokeStyle = '#333';
       ctx.beginPath();
       ctx.moveTo(incision.x,incision.y);
-      nearest(point);
       ctx.lineTo(point.x,point.y);
       ctx.stroke();
     }
