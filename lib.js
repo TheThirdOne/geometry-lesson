@@ -68,39 +68,29 @@ function cg(shape){
   
   return {x:x/shape.points.length,y:y/shape.points.length};
 }
-function cut(poly,a,b){
-  poly.points.push(poly.points[0]);
-  var t;
+function pointOnPoly(shape,a){
   for(var i = 1; i < poly.points.length;i++){
     //a = point[i]
-    if(poly.points[i].x === a.x && poly.points[i].y === a.y){
+    if(shape[i].x === a.x && shape[i].y === a.y){
       a.i = i; a.t = true;
       break;
     }
     //area of triangle with vertices: a, point[i], point[i-1] = 0
-    if(poly.points[i].x * (poly.points[i-1].y - a.y) + poly.points[i-1].x * (a.y - poly.points[i].y) + a.x * (poly.points[i].y - poly.points[i-1].y) === 0){
+    if(shape[i].x * (shape[i-1].y - a.y) + shape[i-1].x * (a.y - shape[i].y) + a.x * (shape[i].y - shape[i-1].y) === 0){
       //if point is between the two vertices
-      if(poly.points[i].x < a.x ^ poly.points[i-1].x < a.x || poly.points[i].y < a.y ^ poly.points[i-1].y < a.y){
+      if(shape[i].x < a.x ^ shape[i-1].x < a.x || shape[i].y < a.y ^ shape[i-1].y < a.y){
         a.i = i;
         break;
       }
     }
   }
-  for(i = 1; i < poly.points.length;i++){
-    //b = point[i]
-    if(poly.points[i].x === b.x && poly.points[i].y === b.y){
-      b.i = i; b.t = true;
-      break;
-    }
-    //area of triangle with vertices: a, point[i], point[i-1] = 0
-    if(poly.points[i].x * (poly.points[i-1].y - b.y) + poly.points[i-1].x * (b.y - poly.points[i].y) + b.x * (poly.points[i].y - poly.points[i-1].y) === 0){
-      //if point is between the two vertices
-      if(poly.points[i].x < b.x ^ poly.points[i-1].x < b.x || poly.points[i].y < b.y ^ poly.points[i-1].y < b.y){
-        b.i = i;
-        break;
-      }
-    }
-  }
+  return a.i !== undefined;
+}
+function cut(poly,a,b){
+  poly.points.push(poly.points[0]);
+  var t;
+  pointOnPoly(poly.points,a);
+  pointOnPoly(poly.points,b);
   poly.points.pop();
   if(a.i === undefined || b.i === undefined){
     throw "Points don't lie on poly:" + a.i + b.i;
@@ -125,61 +115,22 @@ function cut(poly,a,b){
   
   return {points:tmp,color:poly.color};
 }
-function pointInside(point,shape){
-  var intersections = 0,a={m:0,b:point.y},b,tmp;
-  shape.push(shape[0]); // make it loop
-  for(var i = 1; i < shape.length;i++){
-    if(point.y <= shape[i-1].y ^ point.y >= shape[i].y ){
-      continue;
+function pointInside(point, vs) {
+    // ray-casting algorithm based on
+    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+    
+    var x = point.x, y = point.y;
+    
+    var inside = false;
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        var xi = vs[i].x, yi = vs[i].y;
+        var xj = vs[j].x, yj = vs[j].y;
+        
+        var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
     }
-    b = lineFromPoints(shape[i-1],shape[i]);
-    tmp = intersection(a,b);
-    if(tmp === true && (point.x <= shape[i-1].x || point.x <= shape[i].x)){ //colinear
-      intersections++;
-      continue;
-    }
-    if(tmp === undefined || tmp > point.x ){ //never intersects or wrong side
-      continue;
-    }
-    if(!(tmp <= shape[i-1].x ^ tmp >= shape[i].x )|| tmp === shape[i].x || tmp === shape[i-1].x){ //intersection within boundaries
-      intersections++;
-    }
-  }
-  shape.pop();
-  return intersections % 2; //even-odd test
-}
-//intesection between lines (in point slope form) a, b
-function intersection(a,b){
-  //vertical line intersection
-  if(a.x !== undefined && b.x !== undefined){ //both are vertical
-    if(a.x === b.x){
-      return a.x;
-    }else{
-      return;
-    }
-  }else if(a.x !== undefined || b.x !== undefined){ //only one is
-    return a.x || b.x || 0;
-  }
-  
-  if(a.m === b.m){ //parrallel lines
-    if(a.b === b.b){
-      return true;
-    }else{
-      return;
-    }
-  }
-  return -(a.b - b.b)/(a.m - b.m); //solve y = m_1 * x + b_1 = m_2 * x + b_2
-}
-
-//define line ab in point slope form (vertical line has x=k)
-function lineFromPoints(a,b){
-  if(a.x===b.x){
-    return {x:a.x};
-  }
-  var out = {m:0,b:0};
-  out.m = (b.y-a.y)/(b.x - a.x);
-  out.b = a.y-out.m*a.x;
-  return out;
+    return inside;
 }
 
 function Shape(xs,ys){
@@ -189,7 +140,6 @@ function Shape(xs,ys){
   }
   this.color = randomColor();
 }
-
 
 //Graphics
 var hex = "0123456789ABCDEF";
