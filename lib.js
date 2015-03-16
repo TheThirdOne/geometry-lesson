@@ -69,7 +69,7 @@ function cg(shape){
   return {x:x/shape.points.length,y:y/shape.points.length};
 }
 function pointOnPoly(shape,a){
-  for(var i = 1; i < poly.points.length;i++){
+  for(var i = 1; i < shape.length;i++){
     //a = point[i]
     if(shape[i].x === a.x && shape[i].y === a.y){
       a.i = i; a.t = true;
