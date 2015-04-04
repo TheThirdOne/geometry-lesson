@@ -35,6 +35,14 @@ canvas.onmousedown = function(e){
         shapes.selected = i;
       }
     }
+    if(shapes.selected === -1){
+      for(i = 0;i < templates.length;i++){
+        if(pointInside(point,templates[i].points)){
+          shapes.push(copy(templates[i]));
+          shapes.selected = shapes.length - 1;
+        }
+      }
+    }
   }else{
     incision = {x:x,y:y};
     nearest(incision);

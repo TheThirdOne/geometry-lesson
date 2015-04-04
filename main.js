@@ -6,7 +6,13 @@ canvas.width  = window.innerWidth; //canvas should take up the entire screen
 canvas.height = window.innerHeight;
 canvas.width  -= canvas.width%size+size-1; //make the edges line up + not need scrollbars
 canvas.height -= canvas.height%size+size-1;
+var templates = [new Shape([1,2,3],[3,1,3]),
+                 new Shape([4,5,7,6],[3,1,1,3]),
+                 new Shape([8,9,11,12],[3,1,1,3])];
+
 var shapes = [new Shape([1,2,3],[3,1,3]),new Shape([1,2,4,5],[6,4,4,6])];
 shapes.selected = -1;
+
+
 draw();
 

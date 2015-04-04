@@ -141,6 +141,14 @@ function Shape(xs,ys){
   this.color = randomColor();
 }
 
+function copy(shape){
+  var out = new Shape([],[]);
+  for(var i = 0; i < shape.points.length;i++){
+    out.points.push({x:shape.points[i].x,y:shape.points[i].y});
+  }
+  return out;
+}
+
 //Graphics
 var hex = "0123456789ABCDEF";
 function HSVtoRGB(h, s, v) { //http://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurately with modifications
