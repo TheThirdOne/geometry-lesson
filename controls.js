@@ -69,7 +69,12 @@ canvas.onmousemove = function(e){
 canvas.onmouseup = function(e){
   down = false;
   if(shapes.selected !== -1 && !cutmode){
-    snap(shapes[shapes.selected]);
+    if(e.x < size*4 && e.y > size*20){
+      shapes.splice(shapes.selected,1);
+      shapes.selected = -1;
+    }else{
+      snap(shapes[shapes.selected]);
+    }
   }
   if(incision){
     nearest(incision);

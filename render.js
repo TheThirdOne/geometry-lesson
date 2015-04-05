@@ -5,6 +5,7 @@ horizontal = document.getElementById('horizontal'),
 vertical = document.getElementById('vertical'),
 scissor = document.getElementById('scissor'),
 highlight = document.getElementById('highlight');
+trash = document.getElementById('trash');
 var ctx = canvas.getContext("2d");
 
 function clear(ctx){
@@ -81,5 +82,6 @@ function draw(){
   }else{
     ctx.drawImage(scissor,5,size*16-5,size*4-10,size*4-10);
   }
+  ctx.drawImage(trash,5,size*20-5,size*4-10,size*4-10);
   
 }
